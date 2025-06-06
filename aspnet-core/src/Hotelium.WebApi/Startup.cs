@@ -1,0 +1,67 @@
+using Microsoft.OpenApi.Models;
+
+public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostingEnvironment)
+{
+    private const string _defaultCorsPolicyName = "localhost";
+    private const string _apiVersion = "v1";
+
+    private readonly IConfiguration _appConfiguration = appConfiguration;
+    private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddControllers();
+        services.AddCors(
+            options => options.AddPolicy(
+                _defaultCorsPolicyName,
+                builder => builder
+                    .WithOrigins(
+                        _appConfiguration.GetRequiredSection("App:CorsOrigins").Value!
+                            .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                            .ToArray()
+                    )
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+            )
+        );
+
+        ConfigureSwagger(services);
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseCors(_defaultCorsPolicyName);
+        app.UseRouting();
+        app.UseAuthorization();
+        app.UseEndpoints(cfg => cfg.MapControllers());
+    }
+
+    public void ConfigureSwagger(IServiceCollection services)
+    {
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc(_apiVersion, new OpenApiInfo
+            {
+                Version = _apiVersion,
+                Title = "Hotelium API",
+                Description = "Hotelium API for the Hotelium application, built with ASP.NET Core.",
+                Contact = new OpenApiContact
+                {
+                    Name = "Alexander Nole",
+                    Email = string.Empty,
+                    Url = new Uri("https://www.linkedin.com/in/alexnoleaz")
+                }
+            });
+            options.DocInclusionPredicate((docName, description) => true);
+        });
+    }
+}
