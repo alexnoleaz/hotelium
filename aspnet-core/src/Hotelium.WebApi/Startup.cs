@@ -1,4 +1,7 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using Hotelium.Shared.Dependency;
 
 public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostingEnvironment)
 {
@@ -10,6 +13,12 @@ public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostin
 
     public void ConfigureServices(IServiceCollection services)
     {
+        var assemblies = new[] {
+            typeof(Startup).Assembly, // WebApi assembly
+            typeof(ConventionalRegistrar).Assembly, // Infrastructure assembly
+            typeof(ISingletonDependency).Assembly // Application assembly
+        };
+
         services.AddControllers();
         services.AddCors(
             options => options.AddPolicy(
@@ -25,6 +34,11 @@ public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostin
                     .AllowCredentials()
             )
         );
+
+        services.AddConventionalServices(assemblies);
+        services.AddCoreServices(_appConfiguration, assemblies);
+        services.AddValidatorsFromAssemblies(assemblies);
+        services.AddFluentValidationAutoValidation();
 
         ConfigureSwagger(services);
     }
