@@ -14,8 +14,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         base.ConfigureConventions(configurationBuilder);
-        configurationBuilder.Properties<DateTime>().HaveColumnType("date");
-        configurationBuilder.Properties<string>().HaveColumnType("varchar");
+        configurationBuilder.Properties<string>().HaveColumnType("VARCHAR");
         configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
     }
 }
