@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Hotelium.Shared.Repositories;
+using Hotelium.Shared.Services;
 
 namespace Hotelium.Shared.Dependency;
 
@@ -16,6 +17,7 @@ public static class ConventionalRegistrar
         RegisterByLifetime<IScopedDependency>(services, types, ServiceLifetime.Scoped);
         RegisterByLifetime<ITransientDependency>(services, types, ServiceLifetime.Transient);
         RegisterByLifetime<IRepository>(services, types, ServiceLifetime.Transient);
+        RegisterByLifetime<IDomainService>(services, types, ServiceLifetime.Transient);
         RegisterByLifetime<ISingletonDependency>(services, types, ServiceLifetime.Singleton);
     }
 
