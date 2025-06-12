@@ -4,7 +4,9 @@ using Hotelium.Shared.Entities;
 
 namespace Hotelium.Shared.Repositories;
 
-public interface IRepository<TEntity, TPrimaryKey>
+public interface IRepository { }
+
+public interface IRepository<TEntity, TPrimaryKey> : IRepository
     where TEntity : class, IEntity<TPrimaryKey>
 {
     #region Select/Get/Query
