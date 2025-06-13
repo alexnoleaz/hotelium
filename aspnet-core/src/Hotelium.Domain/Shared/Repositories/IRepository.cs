@@ -23,8 +23,8 @@ public interface IRepository<TEntity, TPrimaryKey> : IRepository
     Task<List<TEntity>> GetAllListAsync();
     List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate);
     Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate);
-    TEntity? Get(TPrimaryKey id);
-    Task<TEntity?> GetAsync(TPrimaryKey id);
+    TEntity Get(TPrimaryKey id);
+    Task<TEntity> GetAsync(TPrimaryKey id);
     TEntity? Get(Expression<Func<TEntity, bool>> predicate);
     Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate);
 

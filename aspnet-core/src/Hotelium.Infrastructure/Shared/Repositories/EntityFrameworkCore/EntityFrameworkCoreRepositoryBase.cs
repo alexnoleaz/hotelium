@@ -65,13 +65,15 @@ public class EntityFrameworkCoreRepositoryBase<TEntity, TPrimaryKey>(Application
         return await query.Where(predicate).ToListAsync();
     }
 
-    public virtual TEntity? Get(TPrimaryKey id)
-        => GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
+    public virtual TEntity Get(TPrimaryKey id) =>
+        GetAll().FirstOrDefault(CreateEqualityExpressionForId(id))
+            ?? throw new EntityNotFoundException(typeof(TEntity), id);
 
-    public virtual async Task<TEntity?> GetAsync(TPrimaryKey id)
+    public virtual async Task<TEntity> GetAsync(TPrimaryKey id)
     {
         var query = await GetAllAsync();
-        return await query.FirstOrDefaultAsync(CreateEqualityExpressionForId(id));
+        return await query.FirstOrDefaultAsync(CreateEqualityExpressionForId(id))
+            ?? throw new EntityNotFoundException(typeof(TEntity), id);
     }
 
     public virtual TEntity? Get(Expression<Func<TEntity, bool>> predicate)
