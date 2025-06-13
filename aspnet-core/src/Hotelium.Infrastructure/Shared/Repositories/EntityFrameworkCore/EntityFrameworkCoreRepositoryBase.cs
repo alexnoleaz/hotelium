@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Hotelium.Shared.Entities;
 using Hotelium.Shared.Entities.Auditing;
+using Hotelium.Shared.Exceptions;
 
 namespace Hotelium.Shared.Repositories.EntityFrameworkCore;
 

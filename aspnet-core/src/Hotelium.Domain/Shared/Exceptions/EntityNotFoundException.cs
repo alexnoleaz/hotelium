@@ -1,6 +1,6 @@
-namespace Hotelium.Shared.Entities;
+namespace Hotelium.Shared.Exceptions;
 
-public class EntityNotFoundException : Exception
+public class EntityNotFoundException : DomainException
 {
     private const string DefaultMessage = "The requested entity was not found.";
 
