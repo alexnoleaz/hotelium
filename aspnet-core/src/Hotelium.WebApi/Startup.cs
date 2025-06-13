@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Hotelium.Shared.Dependency;
+using Hotelium.Shared;
 
 public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostingEnvironment)
 {
@@ -19,7 +20,7 @@ public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostin
             typeof(ISingletonDependency).Assembly // Application assembly
         };
 
-        services.AddControllers();
+        services.AddControllers(cfg => cfg.Filters.Add<GlobalExceptionFilter>());
         services.AddCors(
             options => options.AddPolicy(
                 _defaultCorsPolicyName,
@@ -41,6 +42,18 @@ public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostin
         services.AddFluentValidationAutoValidation();
 
         ConfigureSwagger(services);
+
+        services.Configure<ApiBehaviorOptions>(
+            options => options.InvalidModelStateResponseFactory = context =>
+            {
+                var errors = context.ModelState
+                    .Where(x => x.Value?.Errors.Count > 0)
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray());
+
+                var response = Response<Dictionary<string, string[]>>.Fail(errors);
+                return new BadRequestObjectResult(response);
+            }
+        );
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
