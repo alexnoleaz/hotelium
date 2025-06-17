@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Hotelium.Shared.Dependency;
 using Hotelium.Shared;
+using Hotelium.Shared.Filters;
 
 public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostingEnvironment)
 {

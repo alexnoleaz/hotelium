@@ -1,6 +1,6 @@
 using Hotelium.Shared.Exceptions;
 
-namespace Hotelium.Shared;
+namespace Hotelium.Shared.Filters;
 
 public class GlobalExceptionFilter : IExceptionFilter
 {

@@ -1,6 +1,7 @@
 using Hotelium.Users.Dto;
 using Hotelium.Shared.Services.Dto;
 using Hotelium.Shared;
+using Hotelium.Shared.Filters;
 
 namespace Hotelium.Users;
 
@@ -15,7 +16,7 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateUserDto input)
     {
-        var response = Response<UserDto>.Success(await _service.CreateAsync(input));
+        var response = Response<UserDto>.Success(await _service.CreateAsync(input), HttpStatusCode.Created);
         return CreatedAtAction(nameof(Get), new { id = response.Data?.Id }, response);
     }
 
@@ -28,13 +29,9 @@ public class UsersController : ControllerBase
         => Ok(Response<PagedResultDto<UserDto>>.Success(await _service.GetAllAsync(input)));
 
     [HttpPut("{id:long}")]
+    [ValidateRouteIdMatchesBodyId]
     public async Task<IActionResult> Update(long id, [FromBody] UpdateUserDto input)
-    {
-        if (id != input.Id)
-            return BadRequest("ID mismatch between URL and body");
-
-        return Ok(Response<UserDto>.Success(await _service.UpdateAsync(input)));
-    }
+        => Ok(Response<UserDto>.Success(await _service.UpdateAsync(input)));
 
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> Delete(long id)

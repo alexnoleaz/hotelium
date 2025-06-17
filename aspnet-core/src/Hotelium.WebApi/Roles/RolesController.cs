@@ -15,29 +15,17 @@ public class RolesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRoleDto input)
     {
-        var result = await _service.CreateAsync(input);
-        var response = Response<RoleDto>.Success(result, HttpStatusCode.Created);
-
-        return CreatedAtAction(nameof(Get), new { result.Id }, response);
+        var response = Response<RoleDto>.Success(await _service.CreateAsync(input), HttpStatusCode.Created);
+        return CreatedAtAction(nameof(Get), new { response.Data?.Id }, response);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] PagedRoleResultRequestDto input)
-    {
-        var result = await _service.GetAllAsync(input);
-        var response = Response<PagedResultDto<RoleDto>>.Success(result);
-
-        return Ok(response);
-    }
+        => Ok(Response<PagedResultDto<RoleDto>>.Success(await _service.GetAllAsync(input)));
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
-    {
-        var result = await _service.GetAsync(new EntityDto(id));
-        var response = Response<RoleDto>.Success(result);
-
-        return Ok(response);
-    }
+        => Ok(Response<RoleDto>.Success(await _service.GetAsync(new EntityDto(id))));
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
