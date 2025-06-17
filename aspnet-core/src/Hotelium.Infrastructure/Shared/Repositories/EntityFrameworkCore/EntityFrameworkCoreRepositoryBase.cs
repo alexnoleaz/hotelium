@@ -139,6 +139,22 @@ public class EntityFrameworkCoreRepositoryBase<TEntity, TPrimaryKey>(Application
         return Task.FromResult(entity);
     }
 
+    public virtual TEntity Update(TPrimaryKey id, Action<TEntity> updateAction)
+    {
+        var entity = Get(id);
+        updateAction(entity);
+
+        return Update(entity);
+    }
+
+    public virtual async Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction)
+    {
+        var entity = await GetAsync(id);
+        await updateAction(entity);
+
+        return await UpdateAsync(entity);
+    }
+
     #endregion
 
     #region Delete

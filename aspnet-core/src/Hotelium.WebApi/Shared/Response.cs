@@ -19,6 +19,14 @@ public record Response
             Code = code,
         };
 
+    public static Response Success(HttpStatusCode code = HttpStatusCode.OK)
+        => new()
+        {
+            Status = "success",
+            Message = default,
+            Code = code,
+        };
+
     protected Response() { }
 }
 

@@ -14,7 +14,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         base.ConfigureConventions(configurationBuilder);
-        configurationBuilder.Properties<string>().HaveColumnType("VARCHAR");
+        configurationBuilder.Properties<string>().HaveColumnType("VARCHAR").HaveMaxLength(150);
         configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
     }
 }

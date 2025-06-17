@@ -4,7 +4,7 @@ public class ValueAlreadyUsedException : Exception
 {
     private const string DefaultMessage = "The value is already used.";
 
-    public string? PropertyName { get; }
+    public string? Property { get; }
     public object? Value { get; }
 
     public ValueAlreadyUsedException()
@@ -16,16 +16,16 @@ public class ValueAlreadyUsedException : Exception
     public ValueAlreadyUsedException(string? message, Exception? innerException)
         : base(message, innerException) { }
 
-    public ValueAlreadyUsedException(string? propertyName, object? value)
-        : this(propertyName, value, null) { }
+    public ValueAlreadyUsedException(string? property, object? value)
+        : this(property, value, null) { }
 
-    public ValueAlreadyUsedException(string? propertyName, object? value, Exception? innerException)
+    public ValueAlreadyUsedException(string? property, object? value, Exception? innerException)
         : base(
-            $"The value '{value}' of property '{propertyName}' is already used.",
+            $"The value '{value}' of property '{property}' is already used.",
             innerException
         )
     {
-        PropertyName = propertyName;
+        Property = property;
         Value = value;
     }
 }

@@ -43,6 +43,8 @@ public interface IRepository<TEntity, TPrimaryKey> : IRepository
 
     TEntity Update(TEntity entity);
     Task<TEntity> UpdateAsync(TEntity entity);
+    TEntity Update(TPrimaryKey id, Action<TEntity> updateAction);
+    Task<TEntity> UpdateAsync(TPrimaryKey id, Func<TEntity, Task> updateAction);
 
     #endregion
 
