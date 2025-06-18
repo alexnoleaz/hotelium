@@ -56,7 +56,7 @@ namespace Hotelium.Infrastructure.Shared.Repositories.EntityFrameworkCore.Migrat
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Hotelium.Users.User", b =>
@@ -108,7 +108,7 @@ namespace Hotelium.Infrastructure.Shared.Repositories.EntityFrameworkCore.Migrat
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("RoleUser", b =>

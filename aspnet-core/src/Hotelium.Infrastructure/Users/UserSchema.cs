@@ -8,11 +8,9 @@ public class UserSchema : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("Users");
         builder.HasMany(u => u.Roles)
             .WithMany(r => r.Users)
             .UsingEntity(cfg => cfg.ToTable("UserRoles"));
-
 
         builder.Property(u => u.Name).HasMaxLength(UserConsts.MaxNameLength);
         builder.Property(u => u.Surname).HasMaxLength(UserConsts.MaxSurnameLength);

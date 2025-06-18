@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotelium.Infrastructure.Shared.Repositories.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250617103609_InitialMigration")]
+    [Migration("20250618070356_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -59,7 +59,7 @@ namespace Hotelium.Infrastructure.Shared.Repositories.EntityFrameworkCore.Migrat
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Hotelium.Users.User", b =>
@@ -111,7 +111,7 @@ namespace Hotelium.Infrastructure.Shared.Repositories.EntityFrameworkCore.Migrat
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("RoleUser", b =>

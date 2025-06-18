@@ -3,7 +3,9 @@ using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Hotelium.Shared.Dependency;
 using Hotelium.Shared;
+using Hotelium.Shared.Repositories.EntityFrameworkCore;
 using Hotelium.Shared.Filters;
+using Hotelium.Auth;
 
 public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostingEnvironment)
 {
@@ -22,6 +24,9 @@ public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostin
         };
 
         services.AddControllers(cfg => cfg.Filters.Add<GlobalExceptionFilter>());
+
+        AuthConfigurer.Configure(services, _appConfiguration);
+
         services.AddCors(
             options => options.AddPolicy(
                 _defaultCorsPolicyName,
@@ -62,14 +67,24 @@ public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostin
         if (env.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint($"/swagger/{_apiVersion}/swagger.json", $"Hotelium API {_apiVersion}");
+                options.DisplayRequestDuration();
+                options.EnablePersistAuthorization();
+            });
         }
 
         app.UseHttpsRedirection();
         app.UseCors(_defaultCorsPolicyName);
         app.UseRouting();
+
+        app.UseAuthentication();
         app.UseAuthorization();
+
         app.UseEndpoints(cfg => cfg.MapControllers());
+
+        ApplicationDbContextSeeder.SeedAsync(app.ApplicationServices).GetAwaiter().GetResult();
     }
 
     public void ConfigureSwagger(IServiceCollection services)
@@ -90,6 +105,29 @@ public class Startup(IConfiguration appConfiguration, IWebHostEnvironment hostin
                 }
             });
             options.DocInclusionPredicate((docName, description) => true);
+
+            options.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "bearerAuth"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
         });
     }
 }
